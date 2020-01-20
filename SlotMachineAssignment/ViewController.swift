@@ -29,7 +29,86 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         moneyStepper.maximumValue = 1000
         moneyStepper.wraps = true
         moneyStepper.stepValue = 10
+        
+        
+        let randomInt = Int.random(in: 1..<65)
+        print(randomInt)
+        
+        playFunction()
     }
+    
+    func checkRange(value:Int,lowerBounds:Int,upperBounds:Int)->Int{
+        if (value>=lowerBounds && value<=upperBounds){
+               return value
+        }
+        return 0
+//        else{
+//            return value
+//        }
+    }
+    
+    func playFunction(){
+        
+        var betLine = ["","","",""]
+        var outcome = [0,0,0]
+
+        
+        for i in 0..<3{
+            print("i is ",i)
+            outcome[i] = Int.random(in: 0..<65)
+            print("outcome is",outcome[i],outcome)
+            let x = outcome[i]
+            print("x is",x)
+            switch(outcome[i]){
+                
+            case checkRange(value: x, lowerBounds: 1, upperBounds: 27):
+
+                print("no is between 1 and 27",x)
+
+                break
+            case checkRange(value: x, lowerBounds: 28, upperBounds: 37):
+                
+                print("no is between 28 and 37",x)
+                break
+            case checkRange(value: x, lowerBounds: 38, upperBounds: 46):
+                
+                print("no is between 38 and 46",x)
+                break
+                
+            case checkRange(value: x, lowerBounds: 47, upperBounds: 54):
+                
+                print("no is between 47 and 54",x)
+                break
+            case checkRange(value: x, lowerBounds: 55, upperBounds: 59):
+                
+                print("no is between 55 and 59",x)
+                break
+                
+            case checkRange(value: x, lowerBounds: 60, upperBounds: 62):
+                
+                print("no is between 60 and 62",x)
+                break
+                
+            case checkRange(value: x, lowerBounds: 63, upperBounds: 64):
+                
+                print("no is between 63 and 64",x)
+                break
+                
+            case checkRange(value: x, lowerBounds: 65, upperBounds: 65):
+                
+                print("no is 65",outcome[i])
+                break
+                
+                
+                
+            default:
+                break
+            }
+            
+        }
+    }
+    
+    
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
