@@ -16,6 +16,9 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var moneyStepper: UIStepper!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var resetGame: UIButton!
+    @IBOutlet weak var quitGame: UIButton!
+    
     
     var totalAmount = 1000
     var selectedBetAmount = 0
@@ -154,8 +157,6 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
                 let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
                 alert.addAction(action)
                 self.present(alert, animated: true, completion: nil)
-                
-            
         }
     }
     
@@ -173,12 +174,21 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
             if totalAmount == 0{
                 self.moneyStepper.isEnabled = false
                 self.betAmount.text = ""
+                self.playButton.isEnabled = false
             }else{
+                
                 print("else")
                 print(totalAmount,selectedBetAmount)
                 totalAmount = totalAmount-selectedBetAmount
                 print(totalAmount)
                 money.text = String(totalAmount)
+                
+                if totalAmount == 0{
+                    self.playButton.isEnabled = false
+                }else{
+                    print("else part")
+                }
+                
             }
         }
     }
@@ -216,7 +226,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         
         if totalAmount == 0{
             
-            let alert:UIAlertController = UIAlertController(title: "Message", message: "You can't play right now as you have do not have balance in your account.", preferredStyle: .alert)
+            let alert:UIAlertController = UIAlertController(title: "Message", message: "You can't play right now as you have do not have enough balance in your account.", preferredStyle: .alert)
             let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
@@ -237,11 +247,13 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         if totalAmount == 0{
             
             self.moneyStepper.isEnabled = false
+        
             
-            let alert:UIAlertController = UIAlertController(title: "Message", message: "You can't play right now as you have do not have balance in your account.", preferredStyle: .alert)
-            let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
+            
+//            let alert:UIAlertController = UIAlertController(title: "Message", message: "You can't play right now as you have do not have balance in your account.", preferredStyle: .alert)
+//            let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+//            alert.addAction(action)
+//            self.present(alert, animated: true, completion: nil)
         }else{
             if selectedBetAmount == 0{
                 print("please select the betting amount")
@@ -257,6 +269,28 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
             
         }
         
+    }
+    
+    
+    
+    @IBAction func reset(_ sender: UIButton) {
+        self.playButton.isEnabled = true
+        self.totalAmount = 1000
+        self.money.text = String(totalAmount)
+        self.selectedBetAmount = 0
+        self.betAmount.text = ""
+        self.moneyStepper.value = 0
+    }
+    
+    
+    @IBAction func quit(_ sender: UIButton) {
+//        self.dismiss(animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                exit(0)
+            }
+        }
     }
     
     
