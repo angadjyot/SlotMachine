@@ -6,10 +6,19 @@
 //  Copyright © 2020 Angadjot singh. All rights reserved.
 //
 
+// Author's Name - Angadjot Singh , Garima Prashar , Harnam Kaur
+// Student Number - 301060981,      301093329      , 301093907
+// Date last Modified - 22th janaury 2020
+// Program Descriptor - This file includes the logic of the slot machine game
+// Revision History - 1.0
+
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource {
 
+    
+//  declaring the outlets for ui components
     
     @IBOutlet weak var money: UILabel!
     @IBOutlet weak var betAmount: UILabel!
@@ -19,10 +28,10 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     @IBOutlet weak var resetGame: UIButton!
     @IBOutlet weak var quitGame: UIButton!
     
-    
+// declaring the variables
     var totalAmount = 1000
     var selectedBetAmount = 0
-    var betLine = ["","","",""]
+    var betLine = ["","",""]
     var outcome = [0,0,0]
     
     var check = 0
@@ -36,24 +45,43 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     var berries = 0
     var blueBerries = 0
     
+ // declaring audio player reference
+    var bombSoundEffect: AVAudioPlayer?
+    var timer = Timer()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+  //    code for corner radius
         self.playButton.layer.cornerRadius = 10.0
         self.playButton.layer.masksToBounds = true
         money.text = String(totalAmount)
+    
         
+  //    setting the stepper values
         moneyStepper.minimumValue = 0
         moneyStepper.maximumValue = 1000
         moneyStepper.wraps = true
         moneyStepper.stepValue = 10
+    
+        
+    //    code for corner radius
+        self.resetGame.layer.cornerRadius = 10.0
+        self.resetGame.layer.masksToBounds = true
+        
+        self.quitGame.layer.cornerRadius = 10.0
+        self.quitGame.layer.masksToBounds = true
         
         
-        let randomInt = Int.random(in: 1..<65)
-        print(randomInt)
-        
+//        let randomInt = Int.random(in: 1..<65)
+//        print(randomInt)
+//
       //  playFunction()
     }
+   
+ 
+ // checking the range for values
     
     func checkRange(value:Int,lowerBounds:Int,upperBounds:Int)->Int{
         if (value>=lowerBounds && value<=upperBounds){
@@ -64,86 +92,28 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
 //            return !value
 //        }
     }
+   
     
-    func playFunction(){
-    
-        beans = 0
-        dragon = 0
-        kiwi = 0
-        watermellon = 0
-        mango = 0
-        orange = 0
-        berries = 0
-        blueBerries = 0
-        
-        for i in 0..<3{
-           // print("i is ",i)
-            outcome[i] = Int.random(in: 0..<65)
-            //print("outcome is",outcome[i],outcome)
-            let x = outcome[i]
-            //print("x is",x)
-            
-            switch(outcome[i]){
-                
-            case checkRange(value: x, lowerBounds: 1, upperBounds: 27):
-             //   print("no is between 1 and 27",x)
-                betLine[i] = "Mr_beans"
-                beans = beans+1
-                break
-            case checkRange(value: x, lowerBounds: 28, upperBounds: 37):
-            //    print("no is between 28 and 37",x)
-                betLine[i] = "Dragon-Fruit"
-                dragon = dragon+1
-                break
-            case checkRange(value: x, lowerBounds: 38, upperBounds: 46):
-            //    print("no is between 38 and 46",x)
-                betLine[i] = "kiwi"
-                kiwi = kiwi+1
-                break
-                
-            case checkRange(value: x, lowerBounds: 47, upperBounds: 54):
-            //    print("no is between 47 and 54",x)
-                betLine[i] = "watermellon"
-                watermellon = watermellon+1
-                break
-            case checkRange(value: x, lowerBounds: 55, upperBounds: 59):
-            //    print("no is between 55 and 59",x)
-                betLine[i] = "mango"
-                mango = mango+1
-                break
-                
-            case checkRange(value: x, lowerBounds: 60, upperBounds: 62):
-            //    print("no is between 60 and 62",x)
-                betLine[i] = "orange"
-                orange = orange+1
-                break
-                
-            case checkRange(value: x, lowerBounds: 63, upperBounds: 64):
-             //   print("no is between 63 and 64",x)
-                betLine[i] = "berries"
-                berries = berries+1
-                break
-                
-            case checkRange(value: x, lowerBounds: 65, upperBounds: 65):
-                
-             //   print("no is 65",outcome[i])
-                betLine[i] = "blueBerries"
-                blueBerries = blueBerries+1
-                break
-                
-            default:
-                break
-            }
-            
-            
-            self.check = 1
-            self.collectionView.reloadData()
-            checkTheWinProbability()
+ // function for playing the sound
+    func play(sound name : String){
+        guard let url = Bundle.main.url(forResource: name, withExtension: "wav") else{
+            return
         }
-         addOrRemoveMoney()
+        bombSoundEffect = try? AVAudioPlayer(contentsOf: url)
+        bombSoundEffect?.play()
     }
     
     
+
+    func soundFunction(){
+    
+        play(sound: "spin")
+  
+  //    calling the play function after the sound function
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(playFunction), userInfo: nil, repeats: false)
+    }
+    
+  // function for checking the winning probability
     func checkTheWinProbability(){
          if dragon == 3 || kiwi == 3 || watermellon == 3 || mango == 3 || orange == 3 || berries == 3 || blueBerries == 3 {
             
@@ -161,10 +131,100 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     }
     
     
+    
+ // function for finding the randon numbers and displaying images accordingly .
+    
+    @objc func playFunction(){
+        
+        beans = 0
+        dragon = 0
+        kiwi = 0
+        watermellon = 0
+        mango = 0
+        orange = 0
+        berries = 0
+        blueBerries = 0
+        
+        //        play(sound: "spin")
+        
+        
+        for i in 0..<3{
+            // print("i is ",i)
+            outcome[i] = Int.random(in: 0..<65)
+            //print("outcome is",outcome[i],outcome)
+            let x = outcome[i]
+            //print("x is",x)
+            
+            switch(outcome[i]){
+                
+            case checkRange(value: x, lowerBounds: 1, upperBounds: 27):
+                //   print("no is between 1 and 27",x)
+                betLine[i] = "Mr_beans"
+                beans = beans+1
+                break
+            case checkRange(value: x, lowerBounds: 28, upperBounds: 37):
+                //    print("no is between 28 and 37",x)
+                betLine[i] = "Dragon-Fruit"
+                dragon = dragon+1
+                break
+            case checkRange(value: x, lowerBounds: 38, upperBounds: 46):
+                //    print("no is between 38 and 46",x)
+                betLine[i] = "kiwi"
+                kiwi = kiwi+1
+                break
+                
+            case checkRange(value: x, lowerBounds: 47, upperBounds: 54):
+                //    print("no is between 47 and 54",x)
+                betLine[i] = "watermellon"
+                watermellon = watermellon+1
+                break
+            case checkRange(value: x, lowerBounds: 55, upperBounds: 59):
+                //    print("no is between 55 and 59",x)
+                betLine[i] = "mango"
+                mango = mango+1
+                break
+                
+            case checkRange(value: x, lowerBounds: 60, upperBounds: 62):
+                //    print("no is between 60 and 62",x)
+                betLine[i] = "orange"
+                orange = orange+1
+                break
+                
+            case checkRange(value: x, lowerBounds: 63, upperBounds: 64):
+                //   print("no is between 63 and 64",x)
+                betLine[i] = "berries"
+                berries = berries+1
+                break
+                
+            case checkRange(value: x, lowerBounds: 65, upperBounds: 65):
+                
+                //   print("no is 65",outcome[i])
+                betLine[i] = "blueBerries"
+                blueBerries = blueBerries+1
+                break
+                
+            default:
+                break
+            }
+            
+  //       reloading the collection view
+            self.check = 1
+            self.collectionView.reloadData()
+            checkTheWinProbability()
+        }
+        
+  //       function for adding the or removing the money
+           addOrRemoveMoney()
+        
+    }
+    
+    
+   //       function for adding the or removing the money
     func addOrRemoveMoney(){
         
         if dragon == 3 || kiwi == 3 || watermellon == 3 || mango == 3 || orange == 3 || berries == 3 || blueBerries == 3 {
-            
+    
+  //     adding the winning to the user amount
             totalAmount = totalAmount+selectedBetAmount
             money.text = String(totalAmount)
         
@@ -197,7 +257,8 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    
+  
+ // default function for collection view
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }
@@ -208,11 +269,14 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         if check == 0{
             cell.image.image = UIImage(named: "win")
         }else if check == 1{
+            
+            
             let imageIndex = betLine[indexPath.row]
+            let animate = UIImage.animatedImageNamed(imageIndex, duration: 2)
+            cell.image.image = animate
             cell.image.image = UIImage(named: imageIndex)
             cell.image.layer.cornerRadius = 10.0
             cell.image.layer.masksToBounds = true
-            
             
         }
     
@@ -221,7 +285,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     }
     
     
-    
+//  action for stepper for increasing or decreasing the bet money amount .
     @IBAction func stepperAction(_ sender: UIStepper) {
         
         if totalAmount == 0{
@@ -241,7 +305,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         }
     }
     
-
+// action for spinning the reel
     @IBAction func playButtonAction(_ sender: UIButton) {
 
         if totalAmount == 0{
@@ -264,7 +328,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
                 
             }else{
                 
-                playFunction()
+                soundFunction()
             }
             
         }
@@ -272,7 +336,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     }
     
     
-    
+  //  action for resseting the game
     @IBAction func reset(_ sender: UIButton) {
         self.playButton.isEnabled = true
         self.totalAmount = 1000
@@ -282,7 +346,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         self.moneyStepper.value = 0
     }
     
-    
+ // action for quitting the game
     @IBAction func quit(_ sender: UIButton) {
 //        self.dismiss(animated: true, completion: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
