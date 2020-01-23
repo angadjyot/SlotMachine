@@ -45,10 +45,22 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     var berries = 0
     var blueBerries = 0
     
+    var loss = 0
+    var gems = 0
+    var chocolate = 0
+    var strawberry = 0
+    var sprinkleChocolate = 0
+    var sprinklepink = 0
+    var pinkWhite = 0
+    var greenSprinkle = 0
+    
+    
+    
  // declaring audio player reference
     var bombSoundEffect: AVAudioPlayer?
     var timer = Timer()
-    
+    var alertTimer = Timer()
+    var winMessageTimer = Timer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,10 +86,8 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         self.quitGame.layer.masksToBounds = true
         
         
-//        let randomInt = Int.random(in: 1..<65)
-//        print(randomInt)
-//
-      //  playFunction()
+       // checkJackpot()
+        
     }
    
  
@@ -110,42 +120,139 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         play(sound: "spin")
   
   //    calling the play function after the sound function
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(playFunction), userInfo: nil, repeats: false)
+        timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(playFunction), userInfo: nil, repeats: false)
     }
     
   // function for checking the winning probability
     func checkTheWinProbability(){
-         if dragon == 3 || kiwi == 3 || watermellon == 3 || mango == 3 || orange == 3 || berries == 3 || blueBerries == 3 {
+    
+        
+        if gems == 3 || chocolate == 3 || strawberry == 3 || sprinkleChocolate == 3 || sprinklepink == 3 || pinkWhite == 3 || greenSprinkle == 3{
+            print("won")
+            play(sound: "win")
+            winMessageTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(winMessageAlert), userInfo: nil, repeats: false)
             
-            let alert:UIAlertController = UIAlertController(title: "Message", message: "You Win !! \n Congratulations", preferredStyle: .alert)
-            let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
         }else{
            
-                let alert:UIAlertController = UIAlertController(title: "Message", message: "OOPS! Please play again to increase your winning chances.", preferredStyle: .alert)
-                let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
-                alert.addAction(action)
-                self.present(alert, animated: true, completion: nil)
+            print("loss")
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(alertMessage), userInfo: nil, repeats: false)
+            
         }
     }
     
+    @objc func winMessageAlert(){
+        
+        let alert:UIAlertController = UIAlertController(title: "Message", message: "You Win !! \n Congratulations", preferredStyle: .alert)
+        let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
     
+    
+    @objc func alertMessage(){
+        let alert:UIAlertController = UIAlertController(title: "Message", message: "OOPS! Please play again to increase your winning chances.", preferredStyle: .alert)
+        let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+
+    
+//    @objc func playFunction(){
+//
+//        beans = 0
+//        dragon = 0
+//        kiwi = 0
+//        watermellon = 0
+//        mango = 0
+//        orange = 0
+//        berries = 0
+//        blueBerries = 0
+//
+//        //        play(sound: "spin")
+//
+//
+//        for i in 0..<3{
+//            // print("i is ",i)
+//            outcome[i] = Int.random(in: 0..<65)
+//            //print("outcome is",outcome[i],outcome)
+//            let x = outcome[i]
+//            //print("x is",x)
+//
+//            switch(outcome[i]){
+//
+//            case checkRange(value: x, lowerBounds: 1, upperBounds: 27):
+//                //   print("no is between 1 and 27",x)
+//                betLine[i] = "Mr_beans"
+//                beans = beans+1
+//                break
+//            case checkRange(value: x, lowerBounds: 28, upperBounds: 37):
+//                //    print("no is between 28 and 37",x)
+//                betLine[i] = "Dragon-Fruit"
+//                dragon = dragon+1
+//                break
+//            case checkRange(value: x, lowerBounds: 38, upperBounds: 46):
+//                //    print("no is between 38 and 46",x)
+//                betLine[i] = "kiwi"
+//                kiwi = kiwi+1
+//                break
+//
+//            case checkRange(value: x, lowerBounds: 47, upperBounds: 54):
+//                //    print("no is between 47 and 54",x)
+//                betLine[i] = "watermellon"
+//                watermellon = watermellon+1
+//                break
+//            case checkRange(value: x, lowerBounds: 55, upperBounds: 59):
+//                //    print("no is between 55 and 59",x)
+//                betLine[i] = "mango"
+//                mango = mango+1
+//                break
+//
+//            case checkRange(value: x, lowerBounds: 60, upperBounds: 62):
+//                //    print("no is between 60 and 62",x)
+//                betLine[i] = "orange"
+//                orange = orange+1
+//                break
+//
+//            case checkRange(value: x, lowerBounds: 63, upperBounds: 64):
+//                //   print("no is between 63 and 64",x)
+//                betLine[i] = "berries"
+//                berries = berries+1
+//                break
+//
+//            case checkRange(value: x, lowerBounds: 65, upperBounds: 65):
+//
+//                //   print("no is 65",outcome[i])
+//                betLine[i] = "blueBerries"
+//                blueBerries = blueBerries+1
+//                break
+//
+//            default:
+//                break
+//            }
+//
+//  //       reloading the collection view
+//            self.check = 1
+//            self.collectionView.reloadData()
+//            checkTheWinProbability()
+//        }
+//
+//  //       function for adding the or removing the money
+//           addOrRemoveMoney()
+//
+//    }
     
  // function for finding the randon numbers and displaying images accordingly .
     
     @objc func playFunction(){
-        
-        beans = 0
-        dragon = 0
-        kiwi = 0
-        watermellon = 0
-        mango = 0
-        orange = 0
-        berries = 0
-        blueBerries = 0
-        
-        //        play(sound: "spin")
+         loss = 0
+         gems = 0
+         chocolate = 0
+         strawberry = 0
+         sprinkleChocolate = 0
+         sprinklepink = 0
+         pinkWhite = 0
+         greenSprinkle = 0
         
         
         for i in 0..<3{
@@ -158,68 +265,80 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
             switch(outcome[i]){
                 
             case checkRange(value: x, lowerBounds: 1, upperBounds: 27):
-                //   print("no is between 1 and 27",x)
-                betLine[i] = "Mr_beans"
-                beans = beans+1
+                print("no is between 1 and 27",x)
+                betLine[i] = "loss"
+                loss = loss+1
+                print("loss",loss)
                 break
             case checkRange(value: x, lowerBounds: 28, upperBounds: 37):
-                //    print("no is between 28 and 37",x)
-                betLine[i] = "Dragon-Fruit"
-                dragon = dragon+1
+                print("no is between 28 and 37",x)
+                betLine[i] = "gems"
+                gems = gems+1
+                print("gems",gems)
                 break
             case checkRange(value: x, lowerBounds: 38, upperBounds: 46):
-                //    print("no is between 38 and 46",x)
-                betLine[i] = "kiwi"
-                kiwi = kiwi+1
+                print("no is between 38 and 46",x)
+                betLine[i] = "chocolate"
+                chocolate = chocolate+1
+                print("chocolate",chocolate)
                 break
                 
             case checkRange(value: x, lowerBounds: 47, upperBounds: 54):
-                //    print("no is between 47 and 54",x)
-                betLine[i] = "watermellon"
-                watermellon = watermellon+1
+                print("no is between 47 and 54",x)
+                betLine[i] = "strawberry-1"
+                strawberry = strawberry+1
+                print("strawberry",strawberry)
                 break
             case checkRange(value: x, lowerBounds: 55, upperBounds: 59):
-                //    print("no is between 55 and 59",x)
-                betLine[i] = "mango"
-                mango = mango+1
+                print("no is between 55 and 59",x)
+                betLine[i] = "sprinkleChocolate"
+                sprinkleChocolate = sprinkleChocolate+1
+                print("sprinkleChocolate",sprinkleChocolate)
+
                 break
                 
             case checkRange(value: x, lowerBounds: 60, upperBounds: 62):
-                //    print("no is between 60 and 62",x)
-                betLine[i] = "orange"
-                orange = orange+1
+                print("no is between 60 and 62",x)
+                betLine[i] = "sprinklePink"
+                sprinklepink = sprinklepink+1
+                print("sprinklepink",sprinklepink)
                 break
                 
             case checkRange(value: x, lowerBounds: 63, upperBounds: 64):
-                //   print("no is between 63 and 64",x)
-                betLine[i] = "berries"
-                berries = berries+1
+                print("no is between 63 and 64",x)
+                betLine[i] = "pinkWhite"
+                pinkWhite = pinkWhite+1
+                print("pinkWhite",pinkWhite)
                 break
                 
             case checkRange(value: x, lowerBounds: 65, upperBounds: 65):
                 
-                //   print("no is 65",outcome[i])
-                betLine[i] = "blueBerries"
-                blueBerries = blueBerries+1
+                print("no is 65",outcome[i])
+                betLine[i] = "greenSprinkle"
+                greenSprinkle = greenSprinkle+1
+                print("greenSprinkle",greenSprinkle)
                 break
                 
             default:
                 break
             }
             
-  //       reloading the collection view
+            //       reloading the collection view
             self.check = 1
             self.collectionView.reloadData()
-            checkTheWinProbability()
+//            checkTheWinProbability()
         }
         
-  //       function for adding the or removing the money
-           addOrRemoveMoney()
+        checkTheWinProbability()
+//       function for adding the or removing the money
+        
+        addOrRemoveMoney()
         
     }
     
     
-   //       function for adding the or removing the money
+    
+  //       function for adding the or removing the money
     func addOrRemoveMoney(){
         
         if dragon == 3 || kiwi == 3 || watermellon == 3 || mango == 3 || orange == 3 || berries == 3 || blueBerries == 3 {
@@ -227,7 +346,9 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
   //     adding the winning to the user amount
             totalAmount = totalAmount+selectedBetAmount
             money.text = String(totalAmount)
-        
+         
+            checkJackpot()
+            
             
         }else{
             
@@ -251,6 +372,30 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
                 
             }
         }
+    }
+    
+    
+    func checkJackpot(){
+        
+        let jackpotTry = (Int.random(in: 0..<51)+1)
+        let jackpotWin = (Int.random(in: 0..<51)+1)
+        
+        print(jackpotTry,jackpotWin)
+        if jackpotTry == jackpotWin{
+            
+           totalAmount = totalAmount+5000
+           money.text = String(totalAmount)
+            
+            
+       let alert:UIAlertController = UIAlertController(title: "Congratulations", message: "You won the 5000$ Jackpot!!.", preferredStyle: .alert)
+       let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+       alert.addAction(action)
+       self.present(alert, animated: true, completion: nil)
+            
+        }else{
+            print("no jackpot sorry")
+        }
+        
     }
     
     
@@ -309,15 +454,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     @IBAction func playButtonAction(_ sender: UIButton) {
 
         if totalAmount == 0{
-            
             self.moneyStepper.isEnabled = false
-        
-            
-            
-//            let alert:UIAlertController = UIAlertController(title: "Message", message: "You can't play right now as you have do not have balance in your account.", preferredStyle: .alert)
-//            let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
-//            alert.addAction(action)
-//            self.present(alert, animated: true, completion: nil)
         }else{
             if selectedBetAmount == 0{
                 print("please select the betting amount")
