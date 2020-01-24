@@ -341,7 +341,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
   //       function for adding the or removing the money
     func addOrRemoveMoney(){
         
-        if dragon == 3 || kiwi == 3 || watermellon == 3 || mango == 3 || orange == 3 || berries == 3 || blueBerries == 3 {
+        if gems == 3 || chocolate == 3 || strawberry == 3 || sprinkleChocolate == 3 || sprinklepink == 3 || pinkWhite == 3 || greenSprinkle == 3 {
     
   //     adding the winning to the user amount
             totalAmount = totalAmount+selectedBetAmount
@@ -465,7 +465,16 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
                 
             }else{
                 
-                soundFunction()
+                if selectedBetAmount>totalAmount{
+                    print("no money")
+                    let alert:UIAlertController = UIAlertController(title: "Message", message: "You don't have enough money to play the game right now!!", preferredStyle: .alert)
+                    let action:UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+                    alert.addAction(action)
+                    self.present(alert, animated: true, completion: nil)
+                }else{
+                    soundFunction()
+                }
+                
             }
             
         }
